@@ -1,5 +1,8 @@
 ﻿using System;
-using Application;
+using Application.Data;
+using Application.Entities;
+using Application.Services;
+using Microsoft.Data.SqlClient;
 
 namespace Calculator
 {
@@ -7,11 +10,14 @@ namespace Calculator
     {
         static void Main(string[] args)
         {
+            
             Menu();
+            
         }
 
         static void Menu()
         {
+            var calcService = new CalculadoraService(new AppDbContext());
             Console.Clear();
 
             Console.WriteLine("O que deseja fazer?");
@@ -28,16 +34,35 @@ namespace Calculator
 
             switch (res)
             {
-                case 1: Soma(); break;
-                case 2: Subtracao(); break;
-                case 3: Divisao(); break;
-                case 4: Multiplicacao(); break;
+                case 1: Soma(calcService); break;
+                case 2: Subtracao(calcService); break;
+                case 3: Divisao(calcService); break;
+                case 4: Multiplicacao(calcService); break;
                 case 5: Environment.Exit(0); break;
                 default: Menu(); break;
             }
         }
 
-        static void Soma()
+        static void Soma(CalculadoraService service)
+        {
+            Console.Clear();
+
+            Console.WriteLine("Primeiro valor: ");
+            float v1 = float.Parse(Console.ReadLine());
+
+            Console.WriteLine("Segundo valor:");
+            float v2 = float.Parse(Console.ReadLine());
+
+            Console.WriteLine("");
+            
+            
+            float resultado = service.Somar(v1, v2);
+            Console.WriteLine($"O resultado da soma é {resultado}");
+            Console.ReadKey();
+            Menu();
+        }
+
+        static void Subtracao(CalculadoraService service)
         {
             Console.Clear();
 
@@ -49,27 +74,48 @@ namespace Calculator
 
             Console.WriteLine("");
 
-            float resultado = Operacoes.Somar(v1, v2);
-            Console.WriteLine($"O resultado da soma é {resultado}");
+
+            float resultado = service.Subtrair(v1, v2);
+            Console.WriteLine($"O resultado da subtração é {resultado}");
             Console.ReadKey();
             Menu();
         }
 
-        static void Subtracao()
+        static void Divisao(CalculadoraService service)
         {
             Console.Clear();
+
+            Console.WriteLine("Primeiro valor: ");
+            float v1 = float.Parse(Console.ReadLine());
+
+            Console.WriteLine("Segundo valor:");
+            float v2 = float.Parse(Console.ReadLine());
+
+            Console.WriteLine("");
+
+
+            float resultado = service.Dividir(v1, v2);
+            Console.WriteLine($"O resultado da divisão é {resultado}");
+            Console.ReadKey();
             Menu();
         }
 
-        static void Divisao()
+        static void Multiplicacao(CalculadoraService service)
         {
             Console.Clear();
-            Menu();
-        }
 
-        static void Multiplicacao()
-        {
-            Console.Clear();
+            Console.WriteLine("Primeiro valor: ");
+            float v1 = float.Parse(Console.ReadLine());
+
+            Console.WriteLine("Segundo valor:");
+            float v2 = float.Parse(Console.ReadLine());
+
+            Console.WriteLine("");
+
+
+            float resultado = service.Multiplicar(v1, v2);
+            Console.WriteLine($"O resultado da multiplicação é {resultado}");
+            Console.ReadKey();
             Menu();
         }
     }
